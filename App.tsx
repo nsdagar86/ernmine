@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect, useCallback } from 'react';
-import { User, AppSettings, Task, WithdrawalRequest } from './types';
-import { initializeApp, setStoredData, getStoredData } from './store/mockStore';
-import { STORAGE_KEYS } from './constants';
-import Layout from './components/Layout';
-import Home from './pages/Home';
-import Tasks from './pages/Tasks';
-import Referrals from './pages/Referrals';
-import Profile from './pages/Profile';
-import Admin from './pages/Admin';
+import { User, AppSettings, Task, WithdrawalRequest } from './types.ts';
+import { initializeApp, setStoredData, getStoredData } from './store/mockStore.ts';
+import { STORAGE_KEYS } from './constants.ts';
+import Layout from './components/Layout.tsx';
+import Home from './pages/Home.tsx';
+import Tasks from './pages/Tasks.tsx';
+import Referrals from './pages/Referrals.tsx';
+import Profile from './pages/Profile.tsx';
+import Admin from './pages/Admin.tsx';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>('home');
@@ -17,8 +17,6 @@ const App: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [withdrawals, setWithdrawals] = useState<WithdrawalRequest[]>([]);
 
-  // Mock checking if user is Admin
-  // In a real app, this would be validated server-side
   const isAdmin = user?.id === '123456789' || user?.username === 'Admin';
 
   useEffect(() => {
@@ -81,7 +79,6 @@ const App: React.FC = () => {
     setWithdrawals(updatedWithdrawals);
     setStoredData(STORAGE_KEYS.WITHDRAWALS, updatedWithdrawals);
 
-    // Also update the specific user's history and balance if rejected
     const allUsers = getStoredData<User[]>(STORAGE_KEYS.ALL_USERS, []);
     const request = withdrawals.find(w => w.id === id);
     
@@ -92,13 +89,12 @@ const App: React.FC = () => {
         u.withdrawalHistory = u.withdrawalHistory.map(w => w.id === id ? { ...w, status, remark } : w);
         
         if (status === 'rejected') {
-          u.dollars += request.amount; // Refund
+          u.dollars += request.amount;
         }
         
         allUsers[userIndex] = u;
         setStoredData(STORAGE_KEYS.ALL_USERS, allUsers);
         
-        // If current logged in user is the one updated
         if (user && user.id === u.id) {
           setUser({ ...u });
         }
@@ -106,7 +102,7 @@ const App: React.FC = () => {
     }
   }, [user, withdrawals]);
 
-  if (!user || !settings) return <div className="p-8 text-center">Loading mining empire...</div>;
+  if (!user || !settings) return <div className="p-8 text-center bg-gray-900 min-h-screen text-white">Loading Mining Empire...</div>;
 
   return (
     <Layout activeTab={activeTab} onTabChange={setActiveTab} isAdmin={isAdmin}>

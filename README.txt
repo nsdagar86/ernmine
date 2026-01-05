@@ -1,27 +1,37 @@
 
-# EarnMine Deployment Guide
+# EarnMine Deployment Guide (FIXED)
 
-## Troubleshooting GitHub Pages (IMPORTANT)
-If your app is showing a blank page on GitHub Pages:
-1.  **Check Paths**: Ensure your `index.html` uses relative paths (`./index.tsx`).
-2.  **JSX/TSX Support**: Browsers cannot run `.tsx` files directly. You must use a build tool like Vite.
-    - If you are uploading these files directly: They will NOT run. 
-    - You must set up a GitHub Action to build the project.
-    - Alternatively, rename `.tsx` to `.js` and remove all Type annotations and JSX (use React.createElement) - though this is not recommended.
+The reason your site was blank is that GitHub Pages cannot run .tsx files directly. You MUST "build" the project first.
 
-## Deployment Steps:
-1. Initialize a Git repository in this folder.
-2. Push code to GitHub.
-3. Use a tool like **Vite** to build: `npm run build`.
-4. Deploy the `dist` folder to GitHub Pages.
+### Local Setup & Build Instructions:
 
-## Admin Access
-To access the Admin Panel:
-- Log in with Telegram ID `123456789` or ensure your username is exactly `Admin`.
-- The 'Admin' tab will appear in the bottom navigation bar.
+1.  **Install Node.js**: Ensure you have Node.js installed on your computer.
+2.  **Download Files**: Place all the project files into a folder.
+3.  **Install Dependencies**: Open your terminal in that folder and run:
+    ```bash
+    npm install
+    ```
+4.  **Build the Project**: Run the following command:
+    ```bash
+    npm run build
+    ```
+    This will create a new folder named `dist`.
 
-## Features
-- 5-Level MLM (Rewards for levels 1-5).
-- Unskippable Ad-locked mining sessions.
-- Task management system.
-- Refund-enabled withdrawal system.
+### How to Deploy to GitHub Pages:
+
+1.  **Upload the 'dist' folder content**: 
+    Upload ONLY the contents of the `dist` folder to your GitHub repository (or push the `dist` folder to a branch called `gh-pages`).
+2.  **GitHub Settings**: 
+    - Go to your repo Settings > Pages.
+    - Set the source to the branch you uploaded the built files to.
+    - If you uploaded to the `main` branch, make sure you are pointing to where `index.html` (the built one) is.
+
+### Pro Tip (GitHub Actions):
+You can automate this! Create a file at `.github/workflows/deploy.yml` and use a "Vite Deploy" template. This will build your app automatically every time you push.
+
+### Features Included:
+- 5-Level MLM Referral Engine.
+- 6-Hour timed mining sessions with unskippable ads.
+- Task reward system (Coins, Dollars, Speed).
+- Admin Panel for management and withdrawal approvals/rejections.
+- Auto-refund logic for rejected withdrawals.

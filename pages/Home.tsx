@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
-import { User, AppSettings, MiningSession } from '../types';
-import AdOverlay from '../components/AdOverlay';
+import { User, AppSettings, MiningSession } from '../types.ts';
+import AdOverlay from '../components/AdOverlay.tsx';
 
 interface HomeProps {
   user: User;
