@@ -1,5 +1,5 @@
 {
-  "name": "Crypto Mining & Referral MLM MiniApp",
+  "name": "earnref",
   "description": "A high-performance Telegram MiniApp featuring a 5-level MLM referral system, manual 6-hour mining sessions with unskippable ads, task rewards, and a comprehensive admin management panel.",
   "requestFramePermissions": [
     "camera",

@@ -1,18 +1,27 @@
 
+export interface MiningSession {
+  id: string;
+  startTime: number;
+  endTime: number;
+  coinsEarned: number;
+  status: 'completed' | 'active';
+}
+
 export interface User {
-  id: string; // Telegram ID
+  id: string;
   username: string;
   referralCode: string;
   referredBy?: string;
   coins: number;
   dollars: number;
-  miningSpeed: number; // coins per hour
+  miningSpeed: number;
   totalReferrals: number;
-  miningStartTime: number | null; // Timestamp
+  miningStartTime: number | null;
   withdrawalHistory: WithdrawalRequest[];
-  completedTasks: string[]; // Task IDs
+  completedTasks: string[];
+  sessionHistory: MiningSession[];
   levelStats: {
-    [level: number]: number; // level: count
+    [level: number]: number;
   };
 }
 
@@ -43,17 +52,10 @@ export interface AppSettings {
   miningDurationHours: number;
   newMemberRewardCoins: number;
   newMemberRewardSpeed: number;
-  // MLM Rewards per level
   mlmRewards: {
     [level: number]: {
       dollars: number;
       speed: number;
     }
   };
-}
-
-export interface ReferralDetail {
-  username: string;
-  level: number;
-  date: number;
 }

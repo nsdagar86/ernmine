@@ -1,5 +1,5 @@
 
-import { User, AppSettings, Task, WithdrawalRequest, ReferralDetail } from '../types';
+import { User, AppSettings, Task, WithdrawalRequest, MiningSession } from '../types';
 import { STORAGE_KEYS, INITIAL_SETTINGS } from '../constants';
 
 export const getStoredData = <T,>(key: string, defaultValue: T): T => {
@@ -11,16 +11,13 @@ export const setStoredData = <T,>(key: string, value: T): void => {
   localStorage.setItem(key, JSON.stringify(value));
 };
 
-// Initial state logic
 export const initializeApp = (): { user: User; settings: AppSettings; tasks: Task[]; withdrawals: WithdrawalRequest[] } => {
-  // Get URL referral code if exists
   const urlParams = new URLSearchParams(window.location.search);
   const refBy = urlParams.get('ref') || undefined;
 
-  // Mock current user (In reality, use Telegram.WebApp.initData)
   const tgUser = (window as any).Telegram?.WebApp?.initDataUnsafe?.user;
   const currentUserId = tgUser?.id?.toString() || '123456789';
-  const currentUsername = tgUser?.username || 'GuestUser';
+  const currentUsername = tgUser?.username || 'Admin';
 
   let allUsers = getStoredData<User[]>(STORAGE_KEYS.ALL_USERS, []);
   let user = allUsers.find(u => u.id === currentUserId);
@@ -29,7 +26,6 @@ export const initializeApp = (): { user: User; settings: AppSettings; tasks: Tas
   const withdrawals = getStoredData<WithdrawalRequest[]>(STORAGE_KEYS.WITHDRAWALS, []);
 
   if (!user) {
-    // New User Registration
     const newUser: User = {
       id: currentUserId,
       username: currentUsername,
@@ -42,13 +38,13 @@ export const initializeApp = (): { user: User; settings: AppSettings; tasks: Tas
       miningStartTime: null,
       withdrawalHistory: [],
       completedTasks: [],
+      sessionHistory: [],
       levelStats: { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
     };
     
     user = newUser;
     allUsers.push(newUser);
 
-    // Process MLM if referred
     if (refBy) {
       processMLM(refBy, allUsers, settings);
     }
@@ -70,7 +66,6 @@ const processMLM = (refCode: string, allUsers: User[], settings: AppSettings) =>
     currentReferrer.totalReferrals += 1;
     currentReferrer.levelStats[level] = (currentReferrer.levelStats[level] || 0) + 1;
 
-    // Next Level: find who referred the current referrer
     if (currentReferrer.referredBy) {
       currentReferrer = allUsers.find(u => u.referralCode === currentReferrer?.referredBy);
       level++;
